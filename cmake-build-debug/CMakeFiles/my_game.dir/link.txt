@@ -1,0 +1,1 @@
+/usr/bin/cc -L./mlx -lmlx -L/usr/include/../lib -lXext -lX11 -lm -lbsd -g   CMakeFiles/my_game.dir/main.c.o  -o my_game 

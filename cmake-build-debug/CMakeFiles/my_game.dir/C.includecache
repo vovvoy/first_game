@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ljerrica/Documents/Projects/my_game/cub3D.h
+stdio.h
+-
+mlx.h
+-
+
+/home/ljerrica/Documents/Projects/my_game/main.c
+cub3D.h
+/home/ljerrica/Documents/Projects/my_game/cub3D.h
+
