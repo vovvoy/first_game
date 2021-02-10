@@ -113,21 +113,57 @@ void draw_game(t_all *all){
 
 int move(int keycode, t_all *all){
     if (keycode == 'w'){
-        if (all->drw.map[(int)((all->drw.posX + all->drw.dirX * all->drw.moveSpeed) * 24) + (int)(all->drw.posY)] == 0)
+        if (all->drw.map[(int)((all->drw.posY) * 24) + (int)(all->drw.posX + all->drw.dirX * all->drw.moveSpeed)] == 0)
             all->drw.posX += all->drw.dirX * all->drw.moveSpeed;
-        if (all->drw.map[((int)(all->drw.posX) * 24) + (int)(all->drw.posY - all->drw.dirY * all->drw.moveSpeed)] == 0)
+        if (all->drw.map[((int)(all->drw.posY + all->drw.dirY * all->drw.moveSpeed) + (int)(all->drw.posX) * 24)] == 0)
             all->drw.posY += all->drw.dirY * all->drw.moveSpeed;
     }
-//    if (keycode == 's'){
-//        if ()
-//    }
-    printf("%d\n", all->drw.map[(int)((all->drw.posX + all->drw.dirX * all->drw.moveSpeed) * 24) + (int)(all->drw.posY)]);
-//    printf("keycode = %d\n", keycode);
+    if (keycode == 's'){
+        if (all->drw.map[(int)((all->drw.posY) * 24) + (int)(all->drw.posX - all->drw.dirX * all->drw.moveSpeed)] == 0)
+            all->drw.posX -= all->drw.dirX * all->drw.moveSpeed;
+        if (all->drw.map[((int)(all->drw.posY - all->drw.dirY * all->drw.moveSpeed) + (int)(all->drw.posX) * 24)] == 0) {
+            all->drw.posY -= all->drw.dirY * all->drw.moveSpeed;
+        }
+    }
+    if (keycode == 'd'){
+        if (!(all->drw.map[(int)(all->drw.posX) + (int)((all->drw.posY - all->drw.dirX * all->drw.moveSpeed) * 24)]))
+            all->drw.posY -= all->drw.dirX * all->drw.moveSpeed;
+        if (!(all->drw.map[(int)(all->drw.posX + all->drw.dirY * all->drw.moveSpeed) + (int)(all->drw.posY * 24)]))
+            all->drw.posX += all->drw.dirY * all->drw.moveSpeed;
 
+
+
+
+//        all->drw.oldDirX = all->drw.dirX;
+//        all->drw.dirX = all->drw.dirX * cos(-all->drw.rotSpeed) - all->drw.dirY * sin(-all->drw.rotSpeed);
+//        all->drw.dirY = all->drw.oldDirX * sin(-all->drw.rotSpeed) + all->drw.dirY * cos(-all->drw.rotSpeed);
+//        all->drw.oldPlaneX = all->drw.planeX;
+//        all->drw.planeX = all->drw.planeX * cos(-all->drw.rotSpeed) - all->drw.planeY * sin(-all->drw.rotSpeed);
+//        all->drw.planeY = all->drw.oldPlaneX * sin(-all->drw.rotSpeed) + all->drw.planeY * cos(-all->drw.rotSpeed);
+    }
+    if (keycode == 'a'){
+        if (!(all->drw.map[(int)(all->drw.posX - all->drw.dirX * all->drw.moveSpeed) + (int)((all->drw.posY) * 24)]))
+            all->drw.posX -= all->drw.dirY * all->drw.moveSpeed;
+        if (!(all->drw.map[(int)(all->drw.posX) + (int)((all->drw.posY + all->drw.dirY * all->drw.moveSpeed) * 24)]))
+            all->drw.posY += all->drw.dirX * all->drw.moveSpeed;
+
+
+
+
+
+
+//        all->drw.oldDirX = all->drw.dirX;
+//        all->drw.dirX = all->drw.dirX * cos(all->drw.rotSpeed) - all->drw.dirY * sin(all->drw.rotSpeed);
+//        all->drw.dirY = all->drw.oldDirX * sin(all->drw.rotSpeed) + all->drw.dirY * cos(all->drw.rotSpeed);
+//        all->drw.oldPlaneX = all->drw.planeX;
+//        all->drw.planeX = all->drw.planeX * cos(all->drw.rotSpeed) - all->drw.planeY * sin(all->drw.rotSpeed);
+//        all->drw.planeY = all->drw.oldPlaneX * sin(all->drw.rotSpeed) + all->drw.planeY * cos(all->drw.rotSpeed);
+    }
 
     draw_game(all);
     return (1);
 }
+int rotate(int keycode, )
 
 int main() {
     t_all all;
@@ -167,13 +203,13 @@ int main() {
 
     all.drw.screenWidth = 720;
     all.drw.screenHeight = 480;
-    all.drw.posX = 15;
+    all.drw.posX = 22;
     all.drw.posY = 12;
     all.drw.dirX = -1;
     all.drw.dirY = 0;
     all.drw.planeX = 0;
     all.drw.planeY = 0.66;
-    all.drw.moveSpeed = 0.05;
+    all.drw.moveSpeed = 0.5;
     all.drw.rotSpeed = 0.05;
 
     all.mlx.mlx = mlx_init();
@@ -182,7 +218,9 @@ int main() {
     all.mlx.addr = mlx_get_data_addr(all.mlx.img, &all.mlx.bits_per_pixel, &all.mlx.line_length, &all.mlx.endian);
     draw_game(&all);
     printf("%d\n", all.drw.map[all.drw.mapY * 24 + all.drw.mapX]);
-    mlx_key_hook(all.mlx.win, move, &all);
+//    mlx_key_hook(all.mlx.win, move, &all);
+    mlx_hook(all.mlx.win, 2, KeyPressMask, move, &all);
+    mlx_mouse_hook(all.mlx.win, rotate, &all);
     mlx_loop(all.mlx.mlx);
     return 0;
 }

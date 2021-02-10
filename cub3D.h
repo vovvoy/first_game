@@ -2,7 +2,8 @@
 # define CUB3D_H
 
 #include <stdio.h>
-#include <mlx.h>
+#include "mlx.h"
+#include "mlx_int.h"
 #include <stdlib.h>
 #include <math.h>
 
