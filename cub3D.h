@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "mlx.h"
-#include "mlx_int.h"
+#include "./mlx/mlx_int.h"
 #include <stdlib.h>
 #include <math.h>
 
@@ -16,6 +16,24 @@ typedef struct s_mlx{
     int line_length;
     int endian;
 }               t_mlx;
+
+typedef struct s_flags{
+    int w;
+    int a;
+    int s;
+    int d;
+    int r;
+    int l;
+}               t_flags;
+typedef struct s_tex {
+    void    *img;
+    char    *addr;
+    int     width;
+    int     height;
+    int     bpp;
+    int     ll;
+    int     endian;
+}           t_tex;
 
 typedef struct  s_drw{
     double  posX;
@@ -62,6 +80,8 @@ typedef struct  s_drw{
 typedef struct s_all{
     t_mlx   mlx;
     t_drw   drw;
+    t_tex   tex;
+    t_flags flags;
 }               t_all;
 
 #endif

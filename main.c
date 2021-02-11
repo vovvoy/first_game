@@ -111,62 +111,125 @@ void draw_game(t_all *all){
     mlx_put_image_to_window(all->mlx.mlx, all->mlx.win, all->mlx.img, 0, 0);
 }
 
-int move(int keycode, t_all *all){
+int key_press(int keycode, t_all *all){
+    printf("< KEY_PRESS!!! >\n");
+
+    if (keycode == 0xFF1B)
+        exit(0);
     if (keycode == 'w'){
-        if (all->drw.map[(int)((all->drw.posY) * 24) + (int)(all->drw.posX + all->drw.dirX * all->drw.moveSpeed)] == 0)
-            all->drw.posX += all->drw.dirX * all->drw.moveSpeed;
-        if (all->drw.map[((int)(all->drw.posY + all->drw.dirY * all->drw.moveSpeed) + (int)(all->drw.posX) * 24)] == 0)
-            all->drw.posY += all->drw.dirY * all->drw.moveSpeed;
+        all->flags.w = 'w';
+    }
+    if (keycode == 'a'){
+        all->flags.a = 'a';
     }
     if (keycode == 's'){
-        if (all->drw.map[(int)((all->drw.posY) * 24) + (int)(all->drw.posX - all->drw.dirX * all->drw.moveSpeed)] == 0)
+        all->flags.s = 's';
+    }
+    if (keycode == 'd'){
+        all->flags.d = 'd';
+    }
+    if (keycode == 65363){
+        all->flags.r = 1;
+    }
+    if (keycode == 65361){
+        all->flags.l = 1;
+    }
+//    printf("a = %d\ns = %d\nw = %d\nd = %d\n", all->flags.a, all->flags.s, all->flags.w, all->flags.d);
+}
+
+int key_release(int keycode, t_all *all){
+
+    printf("< KEY_RELEASE!!! >\n");
+    printf("%d\n", keycode);
+    if (keycode == 'w'){
+        all->flags.w = 0;
+    }
+    if (keycode == 'a'){
+        all->flags.a = 0;
+    }
+    if (keycode == 's'){
+        all->flags.s = 0;
+    }
+    if (keycode == 'd'){
+        all->flags.d = 0;
+    }
+    if (keycode == 65363){
+        all->flags.r = 0;
+    }
+    if (keycode == 65361){
+        all->flags.l = 0;
+    }
+//    printf("a = %d\ns = %d\nw = %d\nd = %d\n", all->flags.a, all->flags.s, all->flags.w, all->flags.d);
+
+}
+
+int move(t_all *all){
+    printf("< MOVE!!! >\n");
+    if (all->flags.w == 'w'){
+        if (all->drw.map[(int)(all->drw.posX + all->drw.dirX * all->drw.moveSpeed) + (int)(all->drw.posY) * 24] == 0)
+            all->drw.posX += all->drw.dirX * all->drw.moveSpeed;
+        if (all->drw.map[(int)(all->drw.posX) * 24 + (int)(all->drw.posY + all->drw.dirY * all->drw.moveSpeed)] == 0)
+            all->drw.posY += all->drw.dirY * all->drw.moveSpeed;
+
+    }
+    if (all->flags.s == 's'){
+        if (all->drw.map[(int)(all->drw.posX - all->drw.dirX * all->drw.moveSpeed) + (int)(all->drw.posY) * 24] == 0)
             all->drw.posX -= all->drw.dirX * all->drw.moveSpeed;
-        if (all->drw.map[((int)(all->drw.posY - all->drw.dirY * all->drw.moveSpeed) + (int)(all->drw.posX) * 24)] == 0) {
+        if (all->drw.map[(int)(all->drw.posX) * 24 + (int)(all->drw.posY - all->drw.dirY * all->drw.moveSpeed)] == 0) {
             all->drw.posY -= all->drw.dirY * all->drw.moveSpeed;
         }
     }
-    if (keycode == 'd'){
-        if (!(all->drw.map[(int)(all->drw.posX) + (int)((all->drw.posY - all->drw.dirX * all->drw.moveSpeed) * 24)]))
+    if (all->flags.d == 'd'){
+        if (all->drw.map[(int)(all->drw.posX) * 24 + (int)(all->drw.posY - all->drw.dirX * all->drw.moveSpeed)] == 0)
             all->drw.posY -= all->drw.dirX * all->drw.moveSpeed;
-        if (!(all->drw.map[(int)(all->drw.posX + all->drw.dirY * all->drw.moveSpeed) + (int)(all->drw.posY * 24)]))
+        if (all->drw.map[(int)(all->drw.posX + all->drw.dirY * all->drw.moveSpeed) + (int)(all->drw.posY) * 24] == 0)
             all->drw.posX += all->drw.dirY * all->drw.moveSpeed;
-
-
-
-
-//        all->drw.oldDirX = all->drw.dirX;
-//        all->drw.dirX = all->drw.dirX * cos(-all->drw.rotSpeed) - all->drw.dirY * sin(-all->drw.rotSpeed);
-//        all->drw.dirY = all->drw.oldDirX * sin(-all->drw.rotSpeed) + all->drw.dirY * cos(-all->drw.rotSpeed);
-//        all->drw.oldPlaneX = all->drw.planeX;
-//        all->drw.planeX = all->drw.planeX * cos(-all->drw.rotSpeed) - all->drw.planeY * sin(-all->drw.rotSpeed);
-//        all->drw.planeY = all->drw.oldPlaneX * sin(-all->drw.rotSpeed) + all->drw.planeY * cos(-all->drw.rotSpeed);
     }
-    if (keycode == 'a'){
-        if (!(all->drw.map[(int)(all->drw.posX - all->drw.dirX * all->drw.moveSpeed) + (int)((all->drw.posY) * 24)]))
+    if (all->flags.a == 'a'){
+        if (!(all->drw.map[(int)(all->drw.posX - all->drw.dirY * all->drw.moveSpeed) + (int)(all->drw.posY) * 24]))
             all->drw.posX -= all->drw.dirY * all->drw.moveSpeed;
-        if (!(all->drw.map[(int)(all->drw.posX) + (int)((all->drw.posY + all->drw.dirY * all->drw.moveSpeed) * 24)]))
+        if (!(all->drw.map[(int)(all->drw.posX) * 24 + (int)(all->drw.posY + all->drw.dirX * all->drw.moveSpeed)]))
             all->drw.posY += all->drw.dirX * all->drw.moveSpeed;
-
-
-
-
-
-
-//        all->drw.oldDirX = all->drw.dirX;
-//        all->drw.dirX = all->drw.dirX * cos(all->drw.rotSpeed) - all->drw.dirY * sin(all->drw.rotSpeed);
-//        all->drw.dirY = all->drw.oldDirX * sin(all->drw.rotSpeed) + all->drw.dirY * cos(all->drw.rotSpeed);
-//        all->drw.oldPlaneX = all->drw.planeX;
-//        all->drw.planeX = all->drw.planeX * cos(all->drw.rotSpeed) - all->drw.planeY * sin(all->drw.rotSpeed);
-//        all->drw.planeY = all->drw.oldPlaneX * sin(all->drw.rotSpeed) + all->drw.planeY * cos(all->drw.rotSpeed);
     }
-
-    draw_game(all);
+    if(all->flags.r == 1){
+        all->drw.oldDirX = all->drw.dirX;
+        all->drw.dirX = all->drw.dirX * cos(-all->drw.rotSpeed) - all->drw.dirY * sin(-all->drw.rotSpeed);
+        all->drw.dirY = all->drw.oldDirX * sin(-all->drw.rotSpeed) + all->drw.dirY * cos(-all->drw.rotSpeed);
+        all->drw.oldPlaneX = all->drw.planeX;
+        all->drw.planeX = all->drw.planeX * cos(-all->drw.rotSpeed) - all->drw.planeY * sin(-all->drw.rotSpeed);
+        all->drw.planeY = all->drw.oldPlaneX * sin(-all->drw.rotSpeed) + all->drw.planeY * cos(-all->drw.rotSpeed);
+    }
+    if (all->flags.l == 1){
+        all->drw.oldDirX = all->drw.dirX;
+        all->drw.dirX = all->drw.dirX * cos(all->drw.rotSpeed) - all->drw.dirY * sin(all->drw.rotSpeed);
+        all->drw.dirY = all->drw.oldDirX * sin(all->drw.rotSpeed) + all->drw.dirY * cos(all->drw.rotSpeed);
+        all->drw.oldPlaneX = all->drw.planeX;
+        all->drw.planeX = all->drw.planeX * cos(all->drw.rotSpeed) - all->drw.planeY * sin(all->drw.rotSpeed);
+        all->drw.planeY = all->drw.oldPlaneX * sin(all->drw.rotSpeed) + all->drw.planeY * cos(all->drw.rotSpeed);
+    }
+    if (all->flags.a || all->flags.w || all->flags.s || all->flags.d || all->flags.r || all->flags.l)
+        draw_game(all);
     return (1);
 }
-int rotate(int keycode, )
+//int rotate(int keycode, ){
+//
+//}
+
+int escape(int keycode, void *p){
+    if (keycode == 0xFF1B)
+        exit(0);
+    return (1);
+}
 
 int main() {
     t_all all;
+    void *img;
+    char *addr;
+    all.flags.a = 0;
+    all.flags.w = 0;
+    all.flags.s = 0;
+    all.flags.d = 0;
+
     int worldMap[24][24]=
             {
                     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -200,6 +263,7 @@ int main() {
     for (int i = 0; i < 24; i++)
         for (int j = 0; j < 24; j++)
             all.drw.map[i * 24 + j] = worldMap[i][j];
+//    img = put
 
     all.drw.screenWidth = 720;
     all.drw.screenHeight = 480;
@@ -209,8 +273,8 @@ int main() {
     all.drw.dirY = 0;
     all.drw.planeX = 0;
     all.drw.planeY = 0.66;
-    all.drw.moveSpeed = 0.5;
-    all.drw.rotSpeed = 0.05;
+    all.drw.moveSpeed = 0.01;
+    all.drw.rotSpeed = 0.005;
 
     all.mlx.mlx = mlx_init();
     all.mlx.win = mlx_new_window(all.mlx.mlx, all.drw.screenWidth, all.drw.screenHeight, "Hello world!");
@@ -219,8 +283,12 @@ int main() {
     draw_game(&all);
     printf("%d\n", all.drw.map[all.drw.mapY * 24 + all.drw.mapX]);
 //    mlx_key_hook(all.mlx.win, move, &all);
-    mlx_hook(all.mlx.win, 2, KeyPressMask, move, &all);
-    mlx_mouse_hook(all.mlx.win, rotate, &all);
+    mlx_hook(all.mlx.win, KeyPress, KeyPressMask, key_press, &all);
+    mlx_hook(all.mlx.win, KeyRelease, KeyReleaseMask, key_release, &all); //    mlx_key_hook(all.mlx.win, escape, &all);
+    mlx_loop_hook(all.mlx.mlx, move, &all);
+//    mlx_hook(all.mlx.mlx, 2, 1L<<0, move, &all);
+//    mlx_loop_hook(all.mlx.mlx, draw_game, &all);
+//    mlx_mouse_hook(all.mlx.win, rotate, &all);
     mlx_loop(all.mlx.mlx);
     return 0;
 }
